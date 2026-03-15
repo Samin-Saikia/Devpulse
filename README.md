@@ -2,21 +2,23 @@
 
 > Your GitHub analytics dashboard — commit heatmaps, language breakdowns, activity patterns, and streaks, all from your real data.
 
-Live at: **[devpulse.onrender.com](https://devpulse-5y2i.onrender.com)**
+Live at: **[devpulse-5y2i.onrender.com](https://devpulse-5y2i.onrender.com)**
 
 ---
 
-## 📸 Screenshots
+## Interface Preview
 
-
-### Landing Page
-![Landing Page](screenshots\Screenshot_25.png)
-
-### Dashboard
-![Dashboard](screenshots\Screenshot_26.png)
-
-### Charts
-![Charts](screenshots\Screenshot_27.png)
+<p align="center">
+Home
+  <img src="screenshots\Screenshot_25.png" alt="MAXUS 
+  Interface" width="900"/>
+  Dashboard
+  <img src="screenshots\Screenshot_26.png" alt="MAXUS 
+  Interface" width="900"/>
+  Charts
+  <img src="screenshots\Screenshot_27.png" alt="MAXUS 
+  Interface" width="900"/>
+</p>
 
 ---
 
