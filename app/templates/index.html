@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DevPulse — Your GitHub Developer Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+<body class="landing-body">
+  <nav class="nav">
+    <div class="nav-brand">
+      <span class="brand-icon">⚡</span>
+      <span class="brand-name">DevPulse</span>
+    </div>
+  </nav>
+
+  <main class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">GitHub Analytics Dashboard</div>
+      <h1 class="hero-title">
+        Your Coding Life<br />
+        <span class="gradient-text">Visualized</span>
+      </h1>
+      <p class="hero-subtitle">
+        Connect your GitHub account and get a beautiful dashboard showing
+        your commit history, language breakdown, coding time patterns,
+        and activity streaks — all built from your real data.
+      </p>
+
+      <a href="/login" class="btn-github">
+        <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+        Login with GitHub
+      </a>
+
+      <p class="hero-disclaimer">
+        Read-only access to your public repos. No writes, ever.
+      </p>
+    </div>
+
+    <div class="hero-preview">
+      <div class="preview-card">
+        <div class="preview-header">
+          <div class="preview-avatar">👤</div>
+          <div>
+            <div class="preview-name">your username</div>
+            <div class="preview-sub">github.com/you</div>
+          </div>
+        </div>
+        <div class="preview-stats">
+          <div class="preview-stat">
+            <div class="preview-stat-value">—</div>
+            <div class="preview-stat-label">Commits</div>
+          </div>
+          <div class="preview-stat">
+            <div class="preview-stat-value">—</div>
+            <div class="preview-stat-label">Repos</div>
+          </div>
+          <div class="preview-stat">
+            <div class="preview-stat-value">—</div>
+            <div class="preview-stat-label">Top Lang</div>
+          </div>
+          <div class="preview-stat">
+            <div class="preview-stat-value">—</div>
+            <div class="preview-stat-label">Streak</div>
+          </div>
+        </div>
+        <div class="preview-heatmap">
+          {% for i in range(140) %}
+          <div class="heatmap-cell level-{{ range(0, 5) | random }}"></div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <section class="features">
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🟩</div>
+        <h3>Commit Heatmap</h3>
+        <p>GitHub-style calendar showing your coding activity across the full year</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <h3>Language Breakdown</h3>
+        <p>See exactly how your time is split across every language you've written</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🕐</div>
+        <h3>Hourly Activity</h3>
+        <p>Find out whether you're a 9-to-5 or a 2am developer</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔥</div>
+        <h3>Streaks & Stats</h3>
+        <p>Track your longest streak, current streak, stars, and top repos</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>DevPulse · Built with Flask &amp; Chart.js</p>
+  </footer>
+</body>
+</html>

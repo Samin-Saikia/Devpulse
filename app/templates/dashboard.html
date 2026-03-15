@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DevPulse — {{ user.display_name or user.username }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="dashboard-body">
+
+  <nav class="nav">
+    <div class="nav-brand">
+      <span class="brand-icon">⚡</span>
+      <span class="brand-name">DevPulse</span>
+    </div>
+    <div class="nav-user">
+      <img src="{{ user.avatar_url }}" alt="avatar" class="nav-avatar" />
+      <span class="nav-username">{{ user.username }}</span>
+      <a href="/logout" class="btn-logout">Logout</a>
+    </div>
+  </nav>
+
+  <div id="sync-banner" class="sync-banner {% if not syncing %}hidden{% endif %}">
+    <div class="sync-spinner"></div>
+    <span>Fetching your GitHub data — this takes 30–90 seconds the first time…</span>
+  </div>
+
+  <main class="dashboard-main" id="dashboard-content" {% if syncing %}style="opacity:0.4;pointer-events:none"{% endif %}>
+
+    <!-- PROFILE HEADER -->
+    <div class="profile-header">
+      <img src="{{ user.avatar_url }}" alt="avatar" class="profile-avatar" />
+      <div class="profile-info">
+        <h1 class="profile-name">{{ user.display_name or user.username }}</h1>
+        <a href="https://github.com/{{ user.username }}" target="_blank" class="profile-link">
+          github.com/{{ user.username }}
+        </a>
+        <div class="profile-meta">
+          <span>{{ user.followers }} followers</span>
+          <span>·</span>
+          <span>{{ user.following }} following</span>
+          {% if user.last_synced %}
+          <span>·</span>
+          <span class="sync-time">Last synced: {{ user.last_synced.strftime('%b %d, %Y %H:%M') }} UTC</span>
+          {% endif %}
+        </div>
+      </div>
+      <button class="btn-sync" id="sync-btn" onclick="triggerSync()">
+        <span id="sync-btn-text">↻ Refresh Data</span>
+      </button>
+    </div>
+
+    <!-- STAT CARDS -->
+    <div class="stat-cards">
+      <div class="stat-card">
+        <div class="stat-icon">💻</div>
+        <div class="stat-value" id="stat-commits">{{ stats.total_commits if stats else '—' }}</div>
+        <div class="stat-label">Total Commits</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📁</div>
+        <div class="stat-value" id="stat-repos">{{ stats.total_repos if stats else '—' }}</div>
+        <div class="stat-label">Repositories</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-value" id="stat-stars">{{ stats.total_stars if stats else '—' }}</div>
+        <div class="stat-label">Total Stars</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-value" id="stat-streak">{{ stats.longest_streak if stats else '—' }}</div>
+        <div class="stat-label">Longest Streak</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🌐</div>
+        <div class="stat-value lang-value" id="stat-lang">{{ stats.top_language if stats else '—' }}</div>
+        <div class="stat-label">Top Language</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📈</div>
+        <div class="stat-value" id="stat-current-streak">{{ stats.current_streak if stats else '—' }}</div>
+        <div class="stat-label">Current Streak</div>
+      </div>
+    </div>
+
+    <!-- HEATMAP -->
+    <div class="chart-card">
+      <div class="chart-title">Commit Activity — Last 365 Days</div>
+      <div class="heatmap-months" id="heatmap-months"></div>
+      <div class="heatmap-container" id="commit-heatmap"></div>
+      <div class="heatmap-legend">
+        <span>Less</span>
+        <div class="legend-cells">
+          <div class="heatmap-cell level-0"></div>
+          <div class="heatmap-cell level-1"></div>
+          <div class="heatmap-cell level-2"></div>
+          <div class="heatmap-cell level-3"></div>
+          <div class="heatmap-cell level-4"></div>
+        </div>
+        <span>More</span>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW 1: Language + Weekly -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Language Distribution</div>
+        <div class="lang-chart-wrap">
+          <canvas id="lang-chart"></canvas>
+          <div class="lang-legend" id="lang-legend"></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-title">Coding Days — By Day of Week</div>
+        <div class="chart-subtitle" id="peak-day-label"></div>
+        <canvas id="weekly-chart" height="180"></canvas>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW 2: Hourly -->
+    <div class="chart-card">
+      <div class="chart-title">When You Code — By Hour</div>
+      <div class="chart-subtitle" id="peak-hour-label"></div>
+      <canvas id="hourly-chart" height="120"></canvas>
+    </div>
+
+    <!-- TOP REPOS -->
+    <div class="chart-card">
+      <div class="chart-title">Most Active Repositories</div>
+      <table class="repos-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Repository</th>
+            <th>Commits</th>
+            <th>Activity</th>
+          </tr>
+        </thead>
+        <tbody id="repos-tbody">
+          <tr><td colspan="4" class="table-empty">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <p>DevPulse · Built with Flask &amp; Chart.js</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+  <script>
+    window.DEVPULSE_SYNCING = {{ 'true' if syncing else 'false' }};
+  </script>
+</body>
+</html>
