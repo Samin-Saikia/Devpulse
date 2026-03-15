@@ -2,7 +2,7 @@
 
 > Your GitHub analytics dashboard — commit heatmaps, language breakdowns, activity patterns, and streaks, all from your real data.
 
-Live at: **[devpulse.onrender.com](https://devpulse.onrender.com)**
+Live at: **[devpulse.onrender.com](https://devpulse-5y2i.onrender.com)**
 
 ---
 
@@ -66,8 +66,8 @@ git push -u origin main
 2. Click **New OAuth App**
 3. Fill in:
    - **Application name**: `DevPulse`
-   - **Homepage URL**: `https://devpulse.onrender.com`
-   - **Authorization callback URL**: `https://devpulse.onrender.com/callback`
+   - **Homepage URL**: `https://devpulse-5y2i.onrender.com`
+   - **Authorization callback URL**: `https://devpulse-5y2i.onrender.com/callback`
 4. Click **Register application**
 5. Copy the **Client ID**
 6. Click **Generate a new client secret** — copy it immediately
@@ -91,7 +91,7 @@ In your Render dashboard → **Environment**, add these:
 | `GITHUB_CLIENT_ID` | from your GitHub OAuth app |
 | `GITHUB_CLIENT_SECRET` | from your GitHub OAuth app |
 | `SECRET_KEY` | a random hex string (see below) |
-| `APP_URL` | `https://devpulse.onrender.com` |
+| `APP_URL` | `https://devpulse-5y2i.onrender.com` |
 
 Generate a SECRET_KEY:
 ```bash
@@ -162,19 +162,6 @@ devpulse/
 ├── LICENSE
 └── README.md
 ```
-
----
-
-## ❓ Troubleshooting
-
-**"redirect_uri_mismatch" from GitHub**
-Your OAuth app callback URL must exactly match `https://devpulse.onrender.com/callback`.
-
-**Dashboard stuck on syncing**
-The first sync runs in a background thread. Wait up to 2 minutes. Check Render logs for API errors.
-
-**Port errors locally**
-Edit the port in `run.py` and update your GitHub OAuth callback URL to match.
 
 ---
 
